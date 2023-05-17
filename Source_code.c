@@ -1,88 +1,56 @@
-// not working 
-// Libraries for ESP32-CAM and sensors
-#include <WiFi.h>
-#include <WebServer.h>
-#include <WiFiClient.h>
-#include <ESP32Camera.h>
-#include <EEPROM.h>
-#include <Wire.h>
+#include <BlynkSimpleEsp32.h>
+#include <Ultrasonic.h>
 
-// Constants for WiFi and Blynk
-const char* ssid = "your_wifi_ssid";
-const char* password = "your_wifi_password";
-const char* blynk_auth_token = "your_blynk_auth_token";
+// Ultrasonic sensor
+const int trigPin = 12;
+const int echoPin = 13;
+Ultrasonic ultrasonic(trigPin, echoPin);
 
-// Constants for ultrasonic sensor
-constinttrigPin = 13;
-constintechoPin = 12;
-long duration;
-int distance;
+// PIR sensor
+const int pirPin = 2;
 
-// Constants for PIR sensor and buzzer
-constintpirPin = 15;
-constintbuzzerPin = 14;
+// Buzzer
+const int buzzerPin = 14;
 
-// Function to send notification to Blynk app
-void sendNotification() {
-WiFiClient client;
-  if (!client.connect("blynk-cloud.com", 80)) {
-    return;
-  }
-  String url = "/"+ blynk_auth_token + "/notify";
-  String postData = "Intruder detected!";
-client.println("POST " + url + " HTTP/1.1");
-client.println("Host: blynk-cloud.com");
-client.println("Content-Type: application/x-www-form-urlencoded");
-client.print("Content-Length: ");
-client.println(postData.length());
-client.println();
-client.println(postData);
-}
+// Blynk settings
+char auth[] = "YOUR_AUTH_TOKEN";
 
 void setup() {
-  // Initialize serial communication for debugging
-Serial.begin(115200);
+  // Initialize the serial port
+  Serial.begin(115200);
 
-  // Connect to WiFi network
-WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-Serial.println("Connecting to WiFi...");
-  }
-Serial.println("Connected to WiFi");
+  // Initialize the ultrasonic sensor
+  ultrasonic.begin();
 
-  // Initialize ultrasonic sensor
-pinMode(trigPin, OUTPUT);
-pinMode(echoPin, INPUT);
+  // Initialize the PIR sensor
+  pinMode(pirPin, INPUT);
 
-  // Initialize PIR sensor and buzzer
-pinMode(pirPin, INPUT);
-pinMode(buzzerPin, OUTPUT);
+  // Initialize the buzzer
+  pinMode(buzzerPin, OUTPUT);
+
+  // Connect to Blynk
+  Blynk.begin(auth, "YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
 }
 
 void loop() {
-  // Read distance from ultrasonic sensor
-digitalWrite(trigPin, LOW);
-delayMicroseconds(2);
-digitalWrite(trigPin, HIGH);
-delayMicroseconds(10);
-digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
-  distance = duration * 0.034 / 2;
+  // Read the ultrasonic sensor
+  long distance = ultrasonic.read();
 
-  // If intruder is detected outside, send notification to Blynk app and trigger ESP-2 Cam
+  // Read the PIR sensor
+  int pirState = digitalRead(pirPin);
+
+  // If the ultrasonic sensor detects an object within 50 cm, send a notification to Blynk
   if (distance < 50) {
-sendNotification();
-    // Code to trigger ESP-2 Cam to start live streaming video
+    Blynk.notify("Motion detected!");
   }
 
-  // If intruder is detected inside, sound the buzzer
-  if (digitalRead(pirPin) == HIGH) {
-digitalWrite(buzzerPin, HIGH);
-    delay(1000);
-digitalWrite(buzzerPin, LOW);
+  // If the PIR sensor detects movement, trigger the buzzer
+  if (pirState == HIGH) {
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+    digitalWrite(buzzerPin, LOW);
   }
 
-  // Wait for 1 second before checking sensors again
-  delay(1000);
+  // Update Blynk
+  Blynk.run();
 }
