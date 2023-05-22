@@ -1,10 +1,8 @@
 #include <BlynkSimpleEsp32.h>
-#include <Ultrasonic.h>
-
+#define Blynk_serial
 // Ultrasonic sensor
 const int trigPin = 12;
 const int echoPin = 13;
-Ultrasonic ultrasonic(trigPin, echoPin);
 
 // PIR sensor
 const int pirPin = 2;
