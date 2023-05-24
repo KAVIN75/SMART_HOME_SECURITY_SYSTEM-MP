@@ -1,5 +1,5 @@
 #include <BlynkSimpleEsp32.h>
-#define Blynk_serial
+#define BlynkPRINT_serial
 // Ultrasonic sensor
 const int trigPin = 12;
 const int echoPin = 13;
