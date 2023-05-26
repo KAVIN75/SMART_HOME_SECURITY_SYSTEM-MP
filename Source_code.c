@@ -1,14 +1,14 @@
 #include <BlynkSimpleEsp32.h>
 #define BlynkPRINT_serial
 // Ultrasonic sensor
-const int trigPin = 12;
-const int echoPin = 13;
+const int trigPin = 5;
+const int echoPin = 8;
 
 // PIR sensor
 const int pirPin = 2;
 
 // Buzzer
-const int buzzerPin = 14;
+const int buzzerPin = 4;
 
 // Blynk settings
 char auth[] = "YOUR_AUTH_TOKEN";
