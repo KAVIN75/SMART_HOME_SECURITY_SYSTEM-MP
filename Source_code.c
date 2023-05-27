@@ -1,54 +1,54 @@
+#define BLYNK_PRINT Serial
+#include <WiFi.h>
+#include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
-#define BlynkPRINT_serial
-// Ultrasonic sensor
-const int trigPin = 5;
-const int echoPin = 8;
-
-// PIR sensor
-const int pirPin = 2;
-
-// Buzzer
-const int buzzerPin = 4;
-
-// Blynk settings
-char auth[] = "YOUR_AUTH_TOKEN";
-
-void setup() {
-  // Initialize the serial port
-  Serial.begin(115200);
-
-  // Initialize the ultrasonic sensor
-  ultrasonic.begin();
-
-  // Initialize the PIR sensor
-  pinMode(pirPin, INPUT);
-
-  // Initialize the buzzer
-  pinMode(buzzerPin, OUTPUT);
-
-  // Connect to Blynk
-  Blynk.begin(auth, "YOUR_WIFI_SSID", "YOUR_WIFI_PASSWORD");
+#define trigPin 5
+#define echoPin 18
+#define pirPin 2
+#define buzzerPin 4
+char auth[] = "d6XK28hYRZ_PNMlQOPub1aFNkjxyFVvt";
+char ssid[] = "DESKTOP-UP86JPE 4945";
+char pass[] = "92iK:502";
+BlynkTimer timer;
+void setup()
+{
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+pinMode(pirPin, INPUT);
+pinMode(buzzerPin, OUTPUT);
+Serial.begin(9600);
+Blynk.begin(auth, ssid, pass);
+timer.setInterval(1000L, sendSensor);
 }
-
-void loop() {
-  // Read the ultrasonic sensor
-  long distance = ultrasonic.read();
-
-  // Read the PIR sensor
-  int pirState = digitalRead(pirPin);
-
-  // If the ultrasonic sensor detects an object within 50 cm, send a notification to Blynk
-  if (distance < 50) {
-    Blynk.notify("Motion detected!");
-  }
-
-  // If the PIR sensor detects movement, trigger the buzzer
-  if (pirState == HIGH) {
-    digitalWrite(buzzerPin, HIGH);
-  } else {
-    digitalWrite(buzzerPin, LOW);
-  }
-
-  // Update Blynk
-  Blynk.run();
+void loop()
+{
+Blynk.run();
+timer.run();
+}
+void sendSensor()
+{
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+long duration = pulseIn(echoPin, HIGH);
+int distance = duration * 0.034 / 2;
+Serial.print("Distance = ");
+Serial.println(distance);
+if (distance <= 5)
+{
+Blynk.virtualWrite(V0, 1); // Set V0 to 1 to indicate the presence of
+an intruder
+if (digitalRead(pirPin) == HIGH) {
+Serial.println("Intruder detected!");
+digitalWrite(buzzerPin, HIGH); // Turn on buzzer
+} else {
+digitalWrite(buzzerPin, LOW); // Turn off buzzer
+}
+}
+else
+{
+Blynk.virtualWrite(V0, 0); // Set V0 to 0 if no intruder is detected
+}
 }
