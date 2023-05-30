@@ -6,9 +6,9 @@
 #define echoPin 18
 #define pirPin 2
 #define buzzerPin 4
-char auth[] = "d6XK28hYRZ_PNMlQOPub1aFNkjxyFVvt";
-char ssid[] = "DESKTOP-UP86JPE 4945";
-char pass[] = "92iK:502";
+char auth[] = "YOUR AUTH TOKEN ";
+char ssid[] = "WiFi Name";
+char pass[] = "WiFi Password";
 BlynkTimer timer;
 void setup()
 {
