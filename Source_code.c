@@ -7,8 +7,8 @@
 #define pirPin 2
 #define buzzerPin 4
 char auth[] = "YOUR AUTH TOKEN ";
-char ssid[] = "WiFi Name";
-char pass[] = "WiFi Password";
+char ssid[] = "Your WiFi Name";
+char pass[] = "Your WiFi Password";
 BlynkTimer timer;
 void setup()
 {
