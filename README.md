@@ -9,7 +9,7 @@
   <li>Bread Board</li>
   <li>Connecting Wires</li>
 </ul>
-<h1>WORKING OF THE PROJECT<h1/>
+<p>WORKING OF THE PROJECT</p>
 <h5>When a intruder enters the home, the intruder's movement was sensed by the ultrasonic sensor and send a alert notification to the user's mobile phone through the Blynk application. If the person breaks inside a room with valuables then his movement will sensed by Pir sensor and triggers the alarm</h5>
 
 
