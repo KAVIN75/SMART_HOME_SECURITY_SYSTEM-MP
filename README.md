@@ -10,6 +10,6 @@
   <li>Connecting Wires</li>
 </ul>
 <h2>WORKING OF THE PROJECT</h2>
-<p>When a intruder enters the home, the intruder's movement was sensed by the ultrasonic sensor and send a alert notification to the user's mobile phone through the Blynk application. If the person breaks inside a room with valuables then his movement will sensed by Pir sensor and triggers the alarm<p>
+<p>When an intruder enters the home, the intruder's movement was sensed by the ultrasonic sensor and send a alert notification to the user's mobile phone through the Blynk application. If the person breaks inside a room with valuables then his movement will be sensed by the Pir sensor and triggers the alarm.<p>
 
 
